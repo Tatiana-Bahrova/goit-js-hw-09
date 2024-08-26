@@ -5,7 +5,7 @@ let formData = {
 };
 
 const fillFormFields = () => {
-  const fieldData = JSON.parse(localStorage.getItem('feedback-form'));
+  const fieldData = JSON.parse(localStorage.getItem('feedback-form-state'));
   if (fieldData === null) {
     return;
   }
@@ -17,8 +17,6 @@ const fillFormFields = () => {
       feedBackForm.elements[key].value = fieldData[key];
     }
   }
-  console.log(fieldData);
-  console.log(feedBackForm);
 };
 
 fillFormFields();
@@ -27,13 +25,20 @@ const onFeedBackForm = event => {
   const fieldName = event.target.name;
   const fieldValue = event.target.value;
   formData[fieldName] = fieldValue;
-  localStorage.setItem('feedback-form', JSON.stringify(formData));
+  localStorage.setItem('feedback-form-state', JSON.stringify(formData));
 };
 
 const onFeedBackFormSubmit = event => {
   event.preventDefault();
+
+  if (!formData.email || !formData.message) {
+    alert('Fill please all fields');
+    return;
+  }
   event.target.reset();
-  localStorage.removeItem('feedback-form');
+  localStorage.removeItem('feedback-form-state');
+  console.log(formData);
+  formData = { email: '', message: '' };
 };
 
 feedBackForm.addEventListener('change', onFeedBackForm);
